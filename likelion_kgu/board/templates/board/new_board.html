@@ -1,0 +1,58 @@
+{% extends 'likelion/layout.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block content %}
+<section id='board' class="pb-5 mb-5">
+    <div class="container">
+        <h3>NEW POST</h3>
+        <form method="POST" action="{% if board %}{% url 'board_update' board.pk %}{% else %}{% url 'board_create' %}{% endif %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleFormControlInput1">User Name</label>
+                {% if board %}
+                <label>{{board.author}}</label>
+                {% else %}
+                <input type="text" class="form-control" name="author" id="exampleFormControlInput1" placeholder="Insert your name" required>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="exampleFormControlInput2">password</label>
+                {% if board %}
+                <label>수정불가능</label>
+                {% else %}
+                <input type="password" class="form-control" name="password" id="exampleFormControlInput2" placeholder="Insert password" required>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Type</label>
+                <select class="form-control" name="post_type" id="exampleFormControlSelect1" width="5%">
+                    <option>question</option>
+                    <option>complain</option>
+                    <option>request</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput3">Title</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="title"
+                    id="exampleFormControlInput3"
+                    {% if board %}
+                        value="{{board.title}}"
+                    {% endif %}
+                    placeholder="Insert Title">
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Content</label>
+                <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="7">{% if board %}{{board.content}}{% endif %}</textarea>
+            </div>
+            {% if board %}
+            <input type="hidden" value="{{board.pk}}" name="pk">
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

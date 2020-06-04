@@ -1,0 +1,21 @@
+.page-link {
+    color: #fed136 !important;
+}
+.pagination {
+    justify-content: center !important;
+ }
+ @media (min-width: 300px ) and ( max-width: 500px){
+    .modalimg{
+        height: auto; width: 100%
+   }
+ }
+ @media (min-width: 501px ) and ( max-width: 768px){
+   .modalimg{
+        height: auto; width: 100%
+   }
+}
+@media (min-width: 769px ) and ( max-width: 1500px){
+    .modalimg{
+        height: auto; width: 100%
+   }
+}

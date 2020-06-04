@@ -1,0 +1,117 @@
+{% extends 'likelion/layout.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block content %}
+<section class="justify-content-center" id='board'>
+    <!--컨테이너에 board-size  css 적용-->
+    <div class="container board-size">    
+        <table class="board-font-size table table-bordered">
+            <!--보드 큰 폰트 사이즈 조정 (board-font-size)-->
+            <thead style="width:100%">
+                <tr>
+                    <th class="bg-light" scope="col">Title</th>
+                    <td scope="col">{{board.title}}</td>
+                </tr>
+            </thead>
+            <tbody style="width:100%">
+                <tr>
+                    <th class="bg-light" scope="row">Author</th>
+                    <td scope='col'>{{board.author}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- 시간 폰트 사이즈 조정 및 grid적용 -->
+        <div class="container-fluid date-font-size">
+            <!--보드 작은 폰트 사이즈 조정 및 너비에 따른 줄바꿈 처리:grid (board-font-size2)-->
+            <div class='row'>
+                <div class="col-xs-3" style="margin-right:20px"><b>Created_at :</b> {{board.created_at}} |</div>
+                <div class="col-xs-3" style="margin-right:20px"><b>Updated_at :</b> {{board.updated_at}} |</div>
+            </div>
+        </div>
+        <!-- 여기까지 적용 -->
+        <div class="card" style="width: 100%;">
+            <div class="card-header" style="word-spacing:40px">
+                <strong>Content</strong>
+                {% if board.post_type == "question" %}
+                <span class="badge badge-warning p-2">{{board.post_type}}</span>
+                {% elif board.post_type == "complain" %}
+                <span class="badge badge-danger p-2">{{board.post_type}}</span>
+                {% else %}
+                <span class="badge badge-success p-2">{{board.post_type}}</span>
+                {% endif %}
+            </div>
+            <div class="card-body board-font-size2">
+                <p class="card-text">{{board.content|linebreaks}}</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                    update
+                </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">
+                    delete
+                </button>
+            </div>
+        </div>
+        {% if message %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!-- Modal1 -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Update post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'check_password' %}">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{board.pk}}">
+                <input type="hidden" name="url" value="board/new_board.html">
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- Modal2 -->
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Delete post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'check_password' %}">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{board.pk}}">
+                <input type="hidden" name="url" value="board/">
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

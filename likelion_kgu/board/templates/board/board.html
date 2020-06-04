@@ -1,0 +1,107 @@
+{% extends 'likelion/layout.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block title %}{% trans "board" %}{% endblock %}
+{% block content %}
+<section id='board'>
+    <!-- board-table-size 컨테이너 div안에 적용 -->
+    <div class="container board-table-size" style="height:25rem;">
+        <table class="table table-hover" style="height:20rem;">
+            <thead>
+                <tr align ="center" media="(max-wdith:520px)" style="width:60%">
+                    <th scope="col" width="10%">#</th>
+                    <th scope="col" width="40%">Title</th>
+                    <th scope="col" width="10%">author</th>
+                    <!-- 모바일 환경에서 시간과 조회수 보기 없애기 -->
+                    <th scope="col" id="hidden-font" width="20%">created-date</th>
+                    <th scope="col" id="hidden-font" width="10%">Lookup</th>
+                    <!-- 여기까지 -->
+                    <th scope="col" width="10%">Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr align ="center">
+                    <th scope="row">{{contact.id}}</th>
+                    <td><a href="/board/{{contact.id}}/">{{ contact.summary }}</a></td>
+                    <td>{{ contact.author }}</td>
+                    <!-- 모바일 환경에서 시간과 조회수 보기 없애기 -->
+                    <td id="hidden-font">{{ contact.created_at }}</td>
+                    <td id="hidden-font">{{ contact.lookup }}</td>
+                    <!-- 여기까지 -->
+                    <th>
+                        {% if contact.post_type == "question" %}
+                        <span class="badge badge-warning p-2">{{contact.post_type}}</span>
+                        {% elif contact.post_type == "complain" %}
+                        <span class="badge badge-danger p-2">{{contact.post_type}}</span>
+                        {% else %}
+                        <span class="badge badge-success p-2">{{contact.post_type}}</span>
+                        {% endif %}
+                    </th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if message %}
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+        {% endif %}
+        <div class ="navbar">
+            <!-- div row -->
+            <div class="row">
+                <a class="btn btn-primary nav-item" href="{% url 'board_create' %}">Create</a>
+            </div>
+            <!-- div row 및 grid적용 -->
+            <div class="row col-sm-5">
+                <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'board_search' %}">
+                    <!-- div row 로 묶기 -->
+                    <div class="row">
+                        <div class="form-group input-size" wdith="100%">
+                            <!-- input-size css, select-size 적용 -->
+                            <select class="form-control select-size" name="type">
+                                <option>all</option>
+                                <option>question</option>
+                                <option>complain</option>
+                                <option>request</option>
+                            </select>
+                        </div>
+                        <!-- input-size1 css 적용 -->
+                        <input
+                            class="form-control mr-sm-2 input-size1"
+                            type="search"
+                            name="search"
+                            placeholder="Search"
+                            aria-label="Search">
+                        <!-- input-size css 적용 -->
+                        <button class="btn btn-outline-success input-size" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="pagination justify-content-center">
+            <span class="step-links">
+                {% if contacts.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ contacts.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+                </span>
+        
+                {% if contacts.has_next %}
+                    <a href="?page={{ contacts.next_page_number }}">next</a>
+                    <a href="?page={{ contacts.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</section>
+{% endblock %}
